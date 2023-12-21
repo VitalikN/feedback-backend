@@ -1,11 +1,16 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
-const { HandleMongooseError } = require('../helpers');
+const { handleMongooseError } = require('../helpers');
 
 const feedbackSchema = new Schema(
   {
     feedback: {
       type: String,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      require: true,
     },
   },
   { versionKey: false, timestamps: true }
@@ -22,7 +27,7 @@ const schemas = {
   updateSchemaFeedback,
 };
 
-feedbackSchema.post('save', HandleMongooseError);
+feedbackSchema.post('save', handleMongooseError);
 
 const Feedback = model('feedback', feedbackSchema);
 

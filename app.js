@@ -3,9 +3,11 @@ const cors = require('cors');
 const logger = require('morgan');
 require('dotenv').config();
 
-const app = express();
-
 const feedbackRoyter = require('./routes/api/feedback');
+
+const authRoter = require('./routes/api/auth');
+
+const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
@@ -13,6 +15,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/auth', authRoter);
 app.use('/api/feedback', feedbackRoyter);
 
 app.use((req, res) => {
