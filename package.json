@@ -4,7 +4,7 @@
   "description": "feedback-backend",
   "main": "index.js",
   "engines": {
-    "node": "18.15.0"
+    "node": ">=14.20.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
