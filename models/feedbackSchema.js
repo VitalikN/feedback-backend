@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
-const { handleMongooseError } = require('../helpers');
+const { HandleMongooseError } = require('../helpers');
 
 const feedbackSchema = new Schema(
   {
@@ -27,7 +27,7 @@ const schemas = {
   updateSchemaFeedback,
 };
 
-feedbackSchema.post('save', handleMongooseError);
+feedbackSchema.post('save', HandleMongooseError);
 
 const Feedback = model('feedback', feedbackSchema);
 
