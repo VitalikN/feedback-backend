@@ -82,10 +82,26 @@ const logout = async (req, res) => {
   });
 };
 
+const Authorization = () => {
+  const { CLIENT_ID, Primary_Client_Secret, URI_LINKEDIN, SCOPE } = process.env;
+
+  return encodeURI(
+    `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${URI_LINKEDIN}`
+  );
+};
+
+const Redirect = (code) => {
+  const payload = {
+    code,
+  };
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
 
   logout: ctrlWrapper(logout),
+  Authorization,
+  Redirect,
 };

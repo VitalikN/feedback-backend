@@ -4,6 +4,6 @@ const router = express.Router();
 const ctrl = require('../../controllers/feedback');
 const { authenticate } = require('../../middlewares');
 
-router.get('/', authenticate, ctrl.getAll);
+router.get('/', ctrl.getAll);
 
 module.exports = router;
