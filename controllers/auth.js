@@ -86,38 +86,36 @@ const logout = async (req, res) => {
 };
 
 const Authorization = () => {
-  const { CLIENT_ID, Primary_Client_Secret, URI_LINKEDIN, SCOPE } = process.env;
+  const { CLIENT_ID, URI_LINKEDIN, SCOPE } = process.env;
 
   return encodeURI(
     `https://linkedin.com/oauth/v2/authorization?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPE}&redirect_uri=${URI_LINKEDIN}`
   );
 };
 
-const Redirect = (code) => {
-  const { CLIENT_ID, Primary_Client_Secret, URI_LINKEDIN, SCOPE } = process.env;
+const Redirect = async (code) => {
+  const { CLIENT_ID, Primary_Client_Secret, URI_LINKEDIN } = getConfig();
+
   const payload = {
     CLIENT_ID,
     Primary_Client_Secret,
     URI_LINKEDIN,
     grant_type: 'authorization_code',
-    code: code,
+    code,
   };
-  const { data } = axios({
-    url: `https://linkedin.com/oauth/v2/accessToken?${qs.stringify(payload)}`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'x-www-form-urlencoded',
-    },
-  })
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      return error;
-    });
-  return data;
-};
 
+  const response = await axios.post(
+    `https://linkedin.com/oauth/v2/accessToken`,
+    qs.stringify(payload),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    }
+  );
+
+  return response.data;
+};
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
@@ -125,5 +123,5 @@ module.exports = {
 
   logout: ctrlWrapper(logout),
   Authorization,
-  Redirect,
+  Redirect: ctrlWrapper(Redirect),
 };
