@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const qs = require('querystring');
+const axios = require('axios');
 
 const jwt = require('jsonwebtoken');
 const { nanoid } = require('nanoid');
@@ -7,6 +9,7 @@ const { SECRET_KEY } = process.env;
 
 const { ctrlWrapper, HttpError } = require('../helpers');
 const { User } = require('../models/user');
+const { error } = require('console');
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -91,9 +94,28 @@ const Authorization = () => {
 };
 
 const Redirect = (code) => {
+  const { CLIENT_ID, Primary_Client_Secret, URI_LINKEDIN, SCOPE } = process.env;
   const payload = {
-    code,
+    CLIENT_ID,
+    Primary_Client_Secret,
+    URI_LINKEDIN,
+    grant_type: 'authorization_code',
+    code: code,
   };
+  const { data } = axios({
+    url: `https://linkedin.com/oauth/v2/accessToken?${qs.stringify(payload)}`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'x-www-form-urlencoded',
+    },
+  })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error;
+    });
+  return data;
 };
 
 module.exports = {
